@@ -57,6 +57,7 @@ namespace resaurant_management_windows
             this.ShowSignupBtn = new System.Windows.Forms.Button();
             this.fLPTable = new System.Windows.Forms.FlowLayoutPanel();
             this.BookingPanel = new System.Windows.Forms.Panel();
+            this.ToOnlBillPanelBtn = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -71,10 +72,11 @@ namespace resaurant_management_windows
             this.PriceLabel = new System.Windows.Forms.Label();
             this.QuantityTxtBox = new System.Windows.Forms.TextBox();
             this.OnlBillPanel = new System.Windows.Forms.Panel();
+            this.TotalPriceOrderedLabel = new System.Windows.Forms.Label();
             this.PayBtn = new System.Windows.Forms.Button();
             this.BackToBookingBtn = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.OrderedItemFLP = new System.Windows.Forms.FlowLayoutPanel();
             this.loginPanel.SuspendLayout();
             this.signupPanel.SuspendLayout();
             this.BookingPanel.SuspendLayout();
@@ -339,6 +341,7 @@ namespace resaurant_management_windows
             // 
             // BookingPanel
             // 
+            this.BookingPanel.Controls.Add(this.ToOnlBillPanelBtn);
             this.BookingPanel.Controls.Add(this.label10);
             this.BookingPanel.Controls.Add(this.label13);
             this.BookingPanel.Controls.Add(this.label12);
@@ -359,6 +362,19 @@ namespace resaurant_management_windows
             this.BookingPanel.TabIndex = 14;
             this.BookingPanel.Visible = false;
             // 
+            // ToOnlBillPanelBtn
+            // 
+            this.ToOnlBillPanelBtn.AutoSize = true;
+            this.ToOnlBillPanelBtn.Enabled = false;
+            this.ToOnlBillPanelBtn.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ToOnlBillPanelBtn.Location = new System.Drawing.Point(726, 42);
+            this.ToOnlBillPanelBtn.Name = "ToOnlBillPanelBtn";
+            this.ToOnlBillPanelBtn.Size = new System.Drawing.Size(191, 42);
+            this.ToOnlBillPanelBtn.TabIndex = 12;
+            this.ToOnlBillPanelBtn.Text = "Xem Hóa Đơn";
+            this.ToOnlBillPanelBtn.UseVisualStyleBackColor = true;
+            this.ToOnlBillPanelBtn.Click += new System.EventHandler(this.ToOnlBillPanelBtn_Click);
+            // 
             // label10
             // 
             this.label10.BackColor = System.Drawing.SystemColors.ActiveCaption;
@@ -376,7 +392,7 @@ namespace resaurant_management_windows
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(452, 5);
+            this.label13.Location = new System.Drawing.Point(459, 5);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(92, 29);
             this.label13.TabIndex = 11;
@@ -421,9 +437,9 @@ namespace resaurant_management_windows
             this.TotalPriceLabel.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TotalPriceLabel.Location = new System.Drawing.Point(435, 672);
             this.TotalPriceLabel.Name = "TotalPriceLabel";
-            this.TotalPriceLabel.Size = new System.Drawing.Size(77, 29);
+            this.TotalPriceLabel.Size = new System.Drawing.Size(270, 29);
             this.TotalPriceLabel.TabIndex = 7;
-            this.TotalPriceLabel.Text = "Tổng: ";
+            this.TotalPriceLabel.Text = "Tổng hóa đơn dự kiến: 0$";
             // 
             // DescriptionLabel
             // 
@@ -469,7 +485,7 @@ namespace resaurant_management_windows
             // AddProduct
             // 
             this.AddProduct.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AddProduct.Location = new System.Drawing.Point(555, 44);
+            this.AddProduct.Location = new System.Drawing.Point(558, 44);
             this.AddProduct.Name = "AddProduct";
             this.AddProduct.Size = new System.Drawing.Size(96, 37);
             this.AddProduct.TabIndex = 3;
@@ -494,7 +510,7 @@ namespace resaurant_management_windows
             this.QuantityTxtBox.Location = new System.Drawing.Point(289, 44);
             this.QuantityTxtBox.Margin = new System.Windows.Forms.Padding(0);
             this.QuantityTxtBox.Name = "QuantityTxtBox";
-            this.QuantityTxtBox.Size = new System.Drawing.Size(158, 36);
+            this.QuantityTxtBox.Size = new System.Drawing.Size(166, 36);
             this.QuantityTxtBox.TabIndex = 1;
             this.QuantityTxtBox.Text = "Enter quantity...";
             this.QuantityTxtBox.Enter += new System.EventHandler(this.RemoveQuantityPlaceHolder);
@@ -502,10 +518,11 @@ namespace resaurant_management_windows
             // 
             // OnlBillPanel
             // 
+            this.OnlBillPanel.Controls.Add(this.TotalPriceOrderedLabel);
             this.OnlBillPanel.Controls.Add(this.PayBtn);
             this.OnlBillPanel.Controls.Add(this.BackToBookingBtn);
             this.OnlBillPanel.Controls.Add(this.label14);
-            this.OnlBillPanel.Controls.Add(this.flowLayoutPanel1);
+            this.OnlBillPanel.Controls.Add(this.OrderedItemFLP);
             this.OnlBillPanel.Location = new System.Drawing.Point(0, 0);
             this.OnlBillPanel.Margin = new System.Windows.Forms.Padding(0);
             this.OnlBillPanel.Name = "OnlBillPanel";
@@ -513,11 +530,21 @@ namespace resaurant_management_windows
             this.OnlBillPanel.TabIndex = 12;
             this.OnlBillPanel.Visible = false;
             // 
+            // TotalPriceOrderedLabel
+            // 
+            this.TotalPriceOrderedLabel.AutoSize = true;
+            this.TotalPriceOrderedLabel.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TotalPriceOrderedLabel.Location = new System.Drawing.Point(227, 657);
+            this.TotalPriceOrderedLabel.Name = "TotalPriceOrderedLabel";
+            this.TotalPriceOrderedLabel.Size = new System.Drawing.Size(153, 29);
+            this.TotalPriceOrderedLabel.TabIndex = 9;
+            this.TotalPriceOrderedLabel.Text = "Tổng hóa đơn";
+            // 
             // PayBtn
             // 
             this.PayBtn.BackColor = System.Drawing.Color.Lime;
             this.PayBtn.Font = new System.Drawing.Font("Times New Roman", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PayBtn.Location = new System.Drawing.Point(226, 688);
+            this.PayBtn.Location = new System.Drawing.Point(226, 693);
             this.PayBtn.Name = "PayBtn";
             this.PayBtn.Size = new System.Drawing.Size(500, 65);
             this.PayBtn.TabIndex = 8;
@@ -533,13 +560,14 @@ namespace resaurant_management_windows
             this.BackToBookingBtn.TabIndex = 7;
             this.BackToBookingBtn.Text = "Back";
             this.BackToBookingBtn.UseVisualStyleBackColor = true;
+            this.BackToBookingBtn.Click += new System.EventHandler(this.BackToBookingBtn_Click);
             // 
             // label14
             // 
             this.label14.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.label14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label14.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(226, 35);
+            this.label14.Location = new System.Drawing.Point(226, 17);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 2, 0, 0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(500, 77);
@@ -547,17 +575,17 @@ namespace resaurant_management_windows
             this.label14.Text = "Ordered Item List";
             this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // flowLayoutPanel1
+            // OrderedItemFLP
             // 
-            this.flowLayoutPanel1.AutoScroll = true;
-            this.flowLayoutPanel1.AutoScrollMinSize = new System.Drawing.Size(0, 450);
-            this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(226, 112);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(500, 552);
-            this.flowLayoutPanel1.TabIndex = 6;
-            this.flowLayoutPanel1.WrapContents = false;
+            this.OrderedItemFLP.AutoScroll = true;
+            this.OrderedItemFLP.AutoScrollMinSize = new System.Drawing.Size(0, 450);
+            this.OrderedItemFLP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.OrderedItemFLP.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.OrderedItemFLP.Location = new System.Drawing.Point(226, 94);
+            this.OrderedItemFLP.Name = "OrderedItemFLP";
+            this.OrderedItemFLP.Size = new System.Drawing.Size(500, 552);
+            this.OrderedItemFLP.TabIndex = 6;
+            this.OrderedItemFLP.WrapContents = false;
             // 
             // MainForm
             // 
@@ -568,8 +596,8 @@ namespace resaurant_management_windows
             this.Controls.Add(this.ShowSignupBtn);
             this.Controls.Add(this.ShowLoginBtn);
             this.Controls.Add(this.loginPanel);
-            this.Controls.Add(this.fLPTable);
             this.Controls.Add(this.signupPanel);
+            this.Controls.Add(this.fLPTable);
             this.Controls.Add(this.OnlBillPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -584,6 +612,7 @@ namespace resaurant_management_windows
             this.BookingPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DescriptionImg)).EndInit();
             this.OnlBillPanel.ResumeLayout(false);
+            this.OnlBillPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -644,9 +673,11 @@ namespace resaurant_management_windows
         private Label label11;
         private Panel OnlBillPanel;
         private Label label14;
-        private FlowLayoutPanel flowLayoutPanel1;
+        private FlowLayoutPanel OrderedItemFLP;
         private Button BackToBookingBtn;
         private Button PayBtn;
+        private Label TotalPriceOrderedLabel;
+        private Button ToOnlBillPanelBtn;
     }
 }
 

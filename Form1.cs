@@ -23,8 +23,9 @@ namespace resaurant_management_windows
         private string token;
         private const string HOST = "http://localhost:8000";
             //"https://rst-mgt-service.onrender.com";
-        private float TotalPrice = 0.0f;
-        private List<OrderedItem> OrderedItems = new List<OrderedItem>(); 
+        
+        private List<OrderedItem> PenddingOrderedItems = new List<OrderedItem>();
+        private List<OrderedItem> OrderedItems = new List<OrderedItem>();
         public MainForm()
         {
             InitializeComponent();
@@ -299,11 +300,7 @@ namespace resaurant_management_windows
             int quantity;
             if (int.TryParse(QuantityTxtBox.Text, out quantity) && quantity > 0)
             {
-                Panel Item = new Panel
-                {
-                    Size = new Size(10, 10)
-                };
-
+                QuantityTxtBox.Text = "Enter quantity...";
                 Label orderItem = new Label
                 {
                     Text = product.name + " - Số Lượng: " + quantity.ToString()
@@ -311,28 +308,79 @@ namespace resaurant_management_windows
                     AutoSize = false,  // Set AutoSize to false to control the size explicitly
                     MaximumSize = new Size(this.PenddingOrderList.ClientSize.Width - this.PenddingOrderList.Padding.Horizontal, 0),
                     Font = new Font("Times New Roman", 15, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0))),
-                    Margin = new Padding(5, 10, 0, 0),
+                    Margin = new Padding(7),
                     BorderStyle = BorderStyle.FixedSingle,
-                    Padding = new Padding(5)
+                    Padding = new Padding(5),
                 };
 
+
+                FlowLayoutPanel ItemWapper = new FlowLayoutPanel
+                {
+                    AutoSize = true,
+                    AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                    FlowDirection = FlowDirection.LeftToRight,
+                    Width = PenddingOrderList.Width,
+                    BorderStyle = BorderStyle.FixedSingle,
+                };
+
+
+                Button RemoveItemBtn = new Button
+                {
+                    Text = "Xóa",
+                    BackColor = Color.Red,
+                    Font = new Font("Times New Roman", 15, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0))),
+                    Margin = new Padding(3),
+                    AutoSize = true,
+                    Tag = ItemWapper
+                };
+                RemoveItemBtn.Click += RemoveItemBtn_Click;
                 // Adjust the width to fit the FlowLayoutPanel and height to fit the content
                 orderItem.Size = new Size(orderItem.MaximumSize.Width, orderItem.PreferredHeight);
                 orderItem.AutoSize = true;  // Enable AutoSize to adjust the height to fit the content
 
-                PenddingOrderList.Controls.Add(orderItem);
+                ItemWapper.Controls.Add(orderItem);
+                ItemWapper.Controls.Add(RemoveItemBtn);
+                PenddingOrderList.Controls.Add(ItemWapper);
 
 
-                TotalPrice += quantity * product.price;
+                float TotalPrice = 0.0f;
+                
+                OrderedItem Order =
+                    new OrderedItem(product._id, product.name, quantity, product.price);
 
-                OrderedItem Order = new OrderedItem(product._id, quantity);
-                OrderedItems.Add(Order);
-                TotalPriceLabel.Text = "Tổng hóa đơn: " + TotalPrice.ToString() + "$";
+                ItemWapper.Tag = Order;
+
+                PenddingOrderedItems.Add(Order);
+                
+                foreach (OrderedItem item in PenddingOrderedItems)
+                {
+                    TotalPrice += item.price * item.quantity;
+                }
+                
+                TotalPriceLabel.Text = "Tổng hóa đơn dự kiến: " + TotalPrice.ToString() + "$";
             }
-            if (OrderedItems.Count != 0)
+            if (PenddingOrderedItems.Count != 0)
                 OrderBtn.Enabled = true;
         }
-       
+
+        private void RemoveItemBtn_Click(object sender, EventArgs e)
+        {
+            Button button = sender as Button;
+            Control itemWapper = button.Tag as Control;
+            OrderedItem Order = itemWapper.Tag as OrderedItem;
+            PenddingOrderedItems.Remove(Order);
+            PenddingOrderList.Controls.Remove(itemWapper);
+
+            float TotalPrice = 0.0f;
+            foreach (OrderedItem item in PenddingOrderedItems)
+            {
+                TotalPrice += item.price * item.quantity;
+            }
+            TotalPriceLabel.Text = "Tổng hóa đơn dự kiến: " + TotalPrice.ToString() + "$";
+            if (PenddingOrderedItems.Count == 0)
+                OrderBtn.Enabled = false;
+        }
+
         private async void OrderBtn_Click(object sender, EventArgs e)
         {
             try
@@ -342,15 +390,71 @@ namespace resaurant_management_windows
                 using (HttpClient client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                    string json = System.Text.Json.JsonSerializer.Serialize<List<OrderedItem>>(OrderedItems);
+                    string json = System.Text.Json.JsonSerializer.Serialize<List<OrderedItem>>(PenddingOrderedItems);
                     string postData =
                 $"{{\"tableId\": \"{table._id}\", \"orderItems\":{json}}}";
                     StringContent content = new StringContent(postData, Encoding.UTF8, "application/json");
                     HttpResponseMessage response = await client.PostAsync(APIUrl, content);
                     if (response.IsSuccessStatusCode)
                     {
+                        MessageBox.Show("Hệ thống đã ghi nhận đơn đặt hàng của bạn.");
+                        PenddingOrderedItems.Clear();
+                        PenddingOrderList.Controls.Clear();
+                        TotalPriceLabel.Text = "Tổng hóa đơn dự kiến: 0$";
+                        OnlBillPanel.Visible = true;
+                        BookingPanel.Visible = false;
+                        HandleOnlBill();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+        private async void HandleOnlBill()
+        {
+            try
+            {
+                Table table = BookingPanel.Tag as Table;
+                string APIUrl = HOST + "/user/view-ordered-items";
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                    client.DefaultRequestHeaders.Add("id", table._id);
+                    
+                    HttpResponseMessage response = await client.GetAsync(APIUrl);
+                    if (response.IsSuccessStatusCode)
+                    {
                         string responseData = await response.Content.ReadAsStringAsync();
-                       
+                        OrderedItems = JsonConvert.DeserializeObject<List<OrderedItem>>(responseData);
+                        if (OrderedItems.Count() > 0) 
+                            ToOnlBillPanelBtn.Enabled = true;
+                        float TotalPrice = 0.0f;
+                        foreach (OrderedItem item in OrderedItems) 
+                        {
+                            Label orderItem = new Label
+                            {
+                                Text = item.productName + " - Số Lượng: " + item.quantity.ToString()
+                                        + " => " + (item.price * item.quantity).ToString() + "$",
+                                AutoSize = false,  // Set AutoSize to false to control the size explicitly
+                                MaximumSize = new Size(OrderedItemFLP.ClientSize.Width - OrderedItemFLP.Padding.Horizontal, 0),
+                                Font = new Font("Times New Roman", 15, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0))),
+                                Margin = new Padding(7),
+                                BorderStyle = BorderStyle.FixedSingle,
+                                Padding = new Padding(5),
+                            };
+                            orderItem.Size = new Size(orderItem.MaximumSize.Width, orderItem.PreferredHeight);
+                            orderItem.AutoSize = true;  // Enable AutoSize to adjust the height to fit the content
+                            
+                            OrderedItemFLP.Controls.Add(orderItem);
+                            TotalPrice += item.price * item.quantity;
+                        }
+                        TotalPriceOrderedLabel.Text = "Tổng hóa đơn: " + TotalPrice.ToString() + "$";
+                    }
+                    else
+                    {
+                        MessageBox.Show(response.StatusCode.ToString());
                     }
 
                 }
@@ -359,6 +463,18 @@ namespace resaurant_management_windows
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
+        }
+
+        private void BackToBookingBtn_Click(object sender, EventArgs e)
+        {
+            OnlBillPanel.Visible = false;
+            BookingPanel.Visible = true;
+        }
+
+        private void ToOnlBillPanelBtn_Click(object sender, EventArgs e)
+        {
+            OnlBillPanel.Visible = true;
+            BookingPanel.Visible = false;
         }
     }
 }

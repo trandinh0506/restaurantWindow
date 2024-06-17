@@ -8,12 +8,16 @@ namespace resaurant_management_windows
 {
     public class OrderedItem
     {
-        public string ProductId { get; set; }
-        public int Quantity { get; set; }
-        public OrderedItem(string id, int quantity)
+        public string _id { get; set; }
+        public string productName { get; set; }
+        public int quantity { get; set; }
+        public float price { get; set; }
+        public OrderedItem(string id, string name, int quantity, float price)
         {
-            ProductId = id;
-            Quantity = quantity;
+            _id = id;
+            productName = name;
+            this.quantity = quantity;
+            this.price = price;
         }
     }
 }
