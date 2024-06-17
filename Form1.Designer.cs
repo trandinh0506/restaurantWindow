@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace resaurant_management_windows
 {
@@ -54,12 +56,30 @@ namespace resaurant_management_windows
             this.ShowLoginBtn = new System.Windows.Forms.Button();
             this.ShowSignupBtn = new System.Windows.Forms.Button();
             this.fLPTable = new System.Windows.Forms.FlowLayoutPanel();
+            this.BookingPanel = new System.Windows.Forms.Panel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.OrderBtn = new System.Windows.Forms.Button();
+            this.TotalPriceLabel = new System.Windows.Forms.Label();
+            this.DescriptionLabel = new System.Windows.Forms.Label();
+            this.DescriptionImg = new System.Windows.Forms.PictureBox();
+            this.PenddingOrderList = new System.Windows.Forms.FlowLayoutPanel();
             this.ProductsCb = new System.Windows.Forms.ComboBox();
-            this.BookingProduct = new System.Windows.Forms.FlowLayoutPanel();
-            this.PriceTxtBox = new System.Windows.Forms.TextBox();
+            this.AddProduct = new System.Windows.Forms.Button();
+            this.PriceLabel = new System.Windows.Forms.Label();
+            this.QuantityTxtBox = new System.Windows.Forms.TextBox();
+            this.OnlBillPanel = new System.Windows.Forms.Panel();
+            this.PayBtn = new System.Windows.Forms.Button();
+            this.BackToBookingBtn = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.loginPanel.SuspendLayout();
             this.signupPanel.SuspendLayout();
-            this.BookingProduct.SuspendLayout();
+            this.BookingPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DescriptionImg)).BeginInit();
+            this.OnlBillPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // loginPanel
@@ -313,63 +333,257 @@ namespace resaurant_management_windows
             this.fLPTable.AutoSize = true;
             this.fLPTable.Location = new System.Drawing.Point(9, 3);
             this.fLPTable.Name = "fLPTable";
-            this.fLPTable.Size = new System.Drawing.Size(969, 774);
+            this.fLPTable.Size = new System.Drawing.Size(969, 767);
             this.fLPTable.TabIndex = 12;
             this.fLPTable.Visible = false;
+            // 
+            // BookingPanel
+            // 
+            this.BookingPanel.Controls.Add(this.label10);
+            this.BookingPanel.Controls.Add(this.label13);
+            this.BookingPanel.Controls.Add(this.label12);
+            this.BookingPanel.Controls.Add(this.label11);
+            this.BookingPanel.Controls.Add(this.OrderBtn);
+            this.BookingPanel.Controls.Add(this.TotalPriceLabel);
+            this.BookingPanel.Controls.Add(this.DescriptionLabel);
+            this.BookingPanel.Controls.Add(this.DescriptionImg);
+            this.BookingPanel.Controls.Add(this.PenddingOrderList);
+            this.BookingPanel.Controls.Add(this.ProductsCb);
+            this.BookingPanel.Controls.Add(this.AddProduct);
+            this.BookingPanel.Controls.Add(this.PriceLabel);
+            this.BookingPanel.Controls.Add(this.QuantityTxtBox);
+            this.BookingPanel.Location = new System.Drawing.Point(3, 3);
+            this.BookingPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.BookingPanel.Name = "BookingPanel";
+            this.BookingPanel.Size = new System.Drawing.Size(975, 767);
+            this.BookingPanel.TabIndex = 14;
+            this.BookingPanel.Visible = false;
+            // 
+            // label10
+            // 
+            this.label10.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label10.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(435, 105);
+            this.label10.Margin = new System.Windows.Forms.Padding(4, 2, 0, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(518, 58);
+            this.label10.TabIndex = 0;
+            this.label10.Text = "Pendding Order List";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(452, 5);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(92, 29);
+            this.label13.TabIndex = 11;
+            this.label13.Text = "Đơn giá";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(289, 5);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(104, 29);
+            this.label12.TabIndex = 10;
+            this.label12.Text = "Số lượng";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(19, 5);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(154, 29);
+            this.label11.TabIndex = 9;
+            this.label11.Text = "Tên sản phẩm";
+            // 
+            // OrderBtn
+            // 
+            this.OrderBtn.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.OrderBtn.Enabled = false;
+            this.OrderBtn.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OrderBtn.Location = new System.Drawing.Point(642, 706);
+            this.OrderBtn.Name = "OrderBtn";
+            this.OrderBtn.Size = new System.Drawing.Size(131, 42);
+            this.OrderBtn.TabIndex = 8;
+            this.OrderBtn.Text = "Order";
+            this.OrderBtn.UseVisualStyleBackColor = false;
+            this.OrderBtn.Click += new System.EventHandler(this.OrderBtn_Click);
+            // 
+            // TotalPriceLabel
+            // 
+            this.TotalPriceLabel.AutoSize = true;
+            this.TotalPriceLabel.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TotalPriceLabel.Location = new System.Drawing.Point(435, 672);
+            this.TotalPriceLabel.Name = "TotalPriceLabel";
+            this.TotalPriceLabel.Size = new System.Drawing.Size(77, 29);
+            this.TotalPriceLabel.TabIndex = 7;
+            this.TotalPriceLabel.Text = "Tổng: ";
+            // 
+            // DescriptionLabel
+            // 
+            this.DescriptionLabel.AutoSize = true;
+            this.DescriptionLabel.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DescriptionLabel.Location = new System.Drawing.Point(25, 579);
+            this.DescriptionLabel.Name = "DescriptionLabel";
+            this.DescriptionLabel.Size = new System.Drawing.Size(129, 29);
+            this.DescriptionLabel.TabIndex = 6;
+            this.DescriptionLabel.Text = "Description";
+            // 
+            // DescriptionImg
+            // 
+            this.DescriptionImg.Location = new System.Drawing.Point(18, 105);
+            this.DescriptionImg.Name = "DescriptionImg";
+            this.DescriptionImg.Size = new System.Drawing.Size(377, 449);
+            this.DescriptionImg.TabIndex = 5;
+            this.DescriptionImg.TabStop = false;
+            // 
+            // PenddingOrderList
+            // 
+            this.PenddingOrderList.AutoScroll = true;
+            this.PenddingOrderList.AutoScrollMinSize = new System.Drawing.Size(0, 450);
+            this.PenddingOrderList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PenddingOrderList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.PenddingOrderList.Location = new System.Drawing.Point(435, 163);
+            this.PenddingOrderList.Name = "PenddingOrderList";
+            this.PenddingOrderList.Size = new System.Drawing.Size(518, 489);
+            this.PenddingOrderList.TabIndex = 4;
+            this.PenddingOrderList.WrapContents = false;
             // 
             // ProductsCb
             // 
             this.ProductsCb.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ProductsCb.Location = new System.Drawing.Point(3, 3);
+            this.ProductsCb.FormattingEnabled = true;
+            this.ProductsCb.Location = new System.Drawing.Point(14, 44);
+            this.ProductsCb.Margin = new System.Windows.Forms.Padding(0);
             this.ProductsCb.Name = "ProductsCb";
-            this.ProductsCb.Size = new System.Drawing.Size(274, 37);
+            this.ProductsCb.Size = new System.Drawing.Size(271, 37);
             this.ProductsCb.TabIndex = 0;
             this.ProductsCb.SelectedIndexChanged += new System.EventHandler(this.ProductCBSelectedValueChanged);
             // 
-            // BookingProduct
+            // AddProduct
             // 
-            this.BookingProduct.AutoScroll = true;
-            this.BookingProduct.AutoSize = true;
-            this.BookingProduct.Controls.Add(this.ProductsCb);
-            this.BookingProduct.Controls.Add(this.PriceTxtBox);
-            this.BookingProduct.Location = new System.Drawing.Point(3, 3);
-            this.BookingProduct.Name = "BookingProduct";
-            this.BookingProduct.Size = new System.Drawing.Size(975, 774);
-            this.BookingProduct.TabIndex = 13;
-            this.BookingProduct.Visible = false;
+            this.AddProduct.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AddProduct.Location = new System.Drawing.Point(555, 44);
+            this.AddProduct.Name = "AddProduct";
+            this.AddProduct.Size = new System.Drawing.Size(96, 37);
+            this.AddProduct.TabIndex = 3;
+            this.AddProduct.Text = "Add";
+            this.AddProduct.UseVisualStyleBackColor = true;
+            this.AddProduct.Click += new System.EventHandler(this.AddProduct_Click);
             // 
-            // PriceTxtBox
+            // PriceLabel
             // 
-            this.PriceTxtBox.Enabled = false;
-            this.PriceTxtBox.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PriceTxtBox.Location = new System.Drawing.Point(283, 3);
-            this.PriceTxtBox.Name = "PriceTxtBox";
-            this.PriceTxtBox.Size = new System.Drawing.Size(80, 36);
-            this.PriceTxtBox.TabIndex = 1;
-            this.PriceTxtBox.Text = "Price";
+            this.PriceLabel.AutoSize = true;
+            this.PriceLabel.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PriceLabel.Location = new System.Drawing.Point(469, 48);
+            this.PriceLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.PriceLabel.Name = "PriceLabel";
+            this.PriceLabel.Size = new System.Drawing.Size(63, 29);
+            this.PriceLabel.TabIndex = 2;
+            this.PriceLabel.Text = "Price";
+            // 
+            // QuantityTxtBox
+            // 
+            this.QuantityTxtBox.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.QuantityTxtBox.Location = new System.Drawing.Point(289, 44);
+            this.QuantityTxtBox.Margin = new System.Windows.Forms.Padding(0);
+            this.QuantityTxtBox.Name = "QuantityTxtBox";
+            this.QuantityTxtBox.Size = new System.Drawing.Size(158, 36);
+            this.QuantityTxtBox.TabIndex = 1;
+            this.QuantityTxtBox.Text = "Enter quantity...";
+            this.QuantityTxtBox.Enter += new System.EventHandler(this.RemoveQuantityPlaceHolder);
+            this.QuantityTxtBox.Leave += new System.EventHandler(this.AddQuantityPlaceHolder);
+            // 
+            // OnlBillPanel
+            // 
+            this.OnlBillPanel.Controls.Add(this.PayBtn);
+            this.OnlBillPanel.Controls.Add(this.BackToBookingBtn);
+            this.OnlBillPanel.Controls.Add(this.label14);
+            this.OnlBillPanel.Controls.Add(this.flowLayoutPanel1);
+            this.OnlBillPanel.Location = new System.Drawing.Point(0, 0);
+            this.OnlBillPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.OnlBillPanel.Name = "OnlBillPanel";
+            this.OnlBillPanel.Size = new System.Drawing.Size(978, 775);
+            this.OnlBillPanel.TabIndex = 12;
+            this.OnlBillPanel.Visible = false;
+            // 
+            // PayBtn
+            // 
+            this.PayBtn.BackColor = System.Drawing.Color.Lime;
+            this.PayBtn.Font = new System.Drawing.Font("Times New Roman", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PayBtn.Location = new System.Drawing.Point(226, 688);
+            this.PayBtn.Name = "PayBtn";
+            this.PayBtn.Size = new System.Drawing.Size(500, 65);
+            this.PayBtn.TabIndex = 8;
+            this.PayBtn.Text = "Thanh Toán";
+            this.PayBtn.UseVisualStyleBackColor = false;
+            // 
+            // BackToBookingBtn
+            // 
+            this.BackToBookingBtn.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BackToBookingBtn.Location = new System.Drawing.Point(27, 40);
+            this.BackToBookingBtn.Name = "BackToBookingBtn";
+            this.BackToBookingBtn.Size = new System.Drawing.Size(110, 53);
+            this.BackToBookingBtn.TabIndex = 7;
+            this.BackToBookingBtn.Text = "Back";
+            this.BackToBookingBtn.UseVisualStyleBackColor = true;
+            // 
+            // label14
+            // 
+            this.label14.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label14.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(226, 35);
+            this.label14.Margin = new System.Windows.Forms.Padding(4, 2, 0, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(500, 77);
+            this.label14.TabIndex = 5;
+            this.label14.Text = "Ordered Item List";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.AutoScrollMinSize = new System.Drawing.Size(0, 450);
+            this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(226, 112);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(500, 552);
+            this.flowLayoutPanel1.TabIndex = 6;
+            this.flowLayoutPanel1.WrapContents = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(977, 782);
+            this.Controls.Add(this.BookingPanel);
             this.Controls.Add(this.ShowSignupBtn);
             this.Controls.Add(this.ShowLoginBtn);
-            this.Controls.Add(this.signupPanel);
             this.Controls.Add(this.loginPanel);
-            this.Controls.Add(this.BookingProduct);
             this.Controls.Add(this.fLPTable);
+            this.Controls.Add(this.signupPanel);
+            this.Controls.Add(this.OnlBillPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Resaurant";
+            this.Text = "Restaurant";
             this.loginPanel.ResumeLayout(false);
             this.loginPanel.PerformLayout();
             this.signupPanel.ResumeLayout(false);
             this.signupPanel.PerformLayout();
-            this.BookingProduct.ResumeLayout(false);
-            this.BookingProduct.PerformLayout();
+            this.BookingPanel.ResumeLayout(false);
+            this.BookingPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DescriptionImg)).EndInit();
+            this.OnlBillPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -414,9 +628,25 @@ namespace resaurant_management_windows
         private System.Windows.Forms.Button ShowSignupBtn;
         private System.Windows.Forms.Label matchLabel;
         private System.Windows.Forms.FlowLayoutPanel fLPTable;
+        private System.Windows.Forms.Panel BookingPanel;
         private System.Windows.Forms.ComboBox ProductsCb;
-        private System.Windows.Forms.FlowLayoutPanel BookingProduct;
-        private System.Windows.Forms.TextBox PriceTxtBox;
+        private System.Windows.Forms.TextBox QuantityTxtBox;
+        private System.Windows.Forms.Label PriceLabel;
+        private System.Windows.Forms.Button AddProduct;
+        private System.Windows.Forms.FlowLayoutPanel PenddingOrderList;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label DescriptionLabel;
+        private System.Windows.Forms.PictureBox DescriptionImg;
+        private System.Windows.Forms.Label TotalPriceLabel;
+        private System.Windows.Forms.Button OrderBtn;
+        private Label label13;
+        private Label label12;
+        private Label label11;
+        private Panel OnlBillPanel;
+        private Label label14;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private Button BackToBookingBtn;
+        private Button PayBtn;
     }
 }
 

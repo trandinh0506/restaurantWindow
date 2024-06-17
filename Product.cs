@@ -14,5 +14,6 @@ namespace resaurant_management_windows
         public string description { get; set; }
         public string category { get; set; }
         public bool modify { get; set; }
+        public string imageUrl { get; set; }
     }
 }
