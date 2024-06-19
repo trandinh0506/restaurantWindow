@@ -332,7 +332,6 @@ namespace resaurant_management_windows
             // fLPTable
             // 
             this.fLPTable.AutoScroll = true;
-            this.fLPTable.AutoSize = true;
             this.fLPTable.Location = new System.Drawing.Point(9, 3);
             this.fLPTable.Name = "fLPTable";
             this.fLPTable.Size = new System.Drawing.Size(969, 767);
@@ -445,7 +444,8 @@ namespace resaurant_management_windows
             // 
             this.DescriptionLabel.AutoSize = true;
             this.DescriptionLabel.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DescriptionLabel.Location = new System.Drawing.Point(25, 579);
+            this.DescriptionLabel.Location = new System.Drawing.Point(22, 548);
+            this.DescriptionLabel.MaximumSize = new System.Drawing.Size(365, 0);
             this.DescriptionLabel.Name = "DescriptionLabel";
             this.DescriptionLabel.Size = new System.Drawing.Size(129, 29);
             this.DescriptionLabel.TabIndex = 6;
@@ -455,7 +455,7 @@ namespace resaurant_management_windows
             // 
             this.DescriptionImg.Location = new System.Drawing.Point(18, 105);
             this.DescriptionImg.Name = "DescriptionImg";
-            this.DescriptionImg.Size = new System.Drawing.Size(377, 449);
+            this.DescriptionImg.Size = new System.Drawing.Size(377, 420);
             this.DescriptionImg.TabIndex = 5;
             this.DescriptionImg.TabStop = false;
             // 
@@ -550,6 +550,7 @@ namespace resaurant_management_windows
             this.PayBtn.TabIndex = 8;
             this.PayBtn.Text = "Thanh Toán";
             this.PayBtn.UseVisualStyleBackColor = false;
+            this.PayBtn.Click += new System.EventHandler(this.PayBtn_Click);
             // 
             // BackToBookingBtn
             // 
@@ -614,7 +615,6 @@ namespace resaurant_management_windows
             this.OnlBillPanel.ResumeLayout(false);
             this.OnlBillPanel.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

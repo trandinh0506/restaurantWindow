@@ -14,21 +14,22 @@ using Newtonsoft.Json;
 using System.Text.Json;
 
 
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace resaurant_management_windows
 {
     public partial class MainForm : Form
     {
         private string token;
-        private const string HOST = "http://localhost:8000";
-            //"https://rst-mgt-service.onrender.com";
+        private const string HOST = //"http://localhost:8000";
+            "https://rst-mgt-service.onrender.com";
         
         private List<OrderedItem> PenddingOrderedItems = new List<OrderedItem>();
         private List<OrderedItem> OrderedItems = new List<OrderedItem>();
+        private bool isFormClosingHandled = false;
         public MainForm()
         {
             InitializeComponent();
+            this.FormClosing += new FormClosingEventHandler(HandleClosingForm);
         }
 
         private void ShowLoginPanel(object sender, EventArgs e)
@@ -191,16 +192,19 @@ namespace resaurant_management_windows
                     {
                         string responseData = await response.Content.ReadAsStringAsync();
                         List<Table> tables = JsonConvert.DeserializeObject<List<Table>>(responseData);
+                        fLPTable.Controls.Clear();
                         foreach(var table in tables)
                         {
                             Button button = new Button
                             {
-                                Text = "Bàn " + table.tableName,
+                                Text = "Bàn " + table.tableName + " - "
+                                + table.numberOfSeats.ToString() + " Ghế",
                                 Enabled = !table.isBooked,
                                 AutoSize = true,
                                 Font = new Font("Times New Roman",
                                 19.8F, FontStyle.Regular,
                                 GraphicsUnit.Point, ((byte)(0))),
+                                Margin = new Padding(5),
                                 Tag = table
                         };
                             button.Click += HandleBookingTable;
@@ -229,7 +233,7 @@ namespace resaurant_management_windows
             {
                 Product product = cb.SelectedValue as Product;
                 PriceLabel.Text = product.price.ToString() + "$";
-                this.DescriptionLabel.Text = product.description;
+                DescriptionLabel.Text = product.description;
                 LoadImage(product.imageUrl);
             }
         }
@@ -241,6 +245,35 @@ namespace resaurant_management_windows
                 clickedButton.Enabled = false;
                 if (clickedButton.Tag is Table table)
                 {
+                    try
+                    {
+                        using (HttpClient client = new HttpClient())
+                        {
+                            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                            client.DefaultRequestHeaders.Add("id", table._id);
+                            HttpResponseMessage response =
+                                await client.GetAsync(HOST + "/table/choose-table");
+                            if (response.IsSuccessStatusCode)
+                            {
+                    // do nothing here it only to verify that the table is exactly avalible
+                            }
+                            else
+                            {
+                                string ResponseMessage = await response.Content.ReadAsStringAsync();
+                                MessageBox.Show(response.StatusCode.ToString() + " - " + ResponseMessage);
+                                HandleShowTables();
+                                return;
+                            }
+                            
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                        HandleShowTables();
+                        return;
+                    }
+            // after verify that the table is avalible. get product from server and render
                     try
                     {
                         string apiUrl = HOST + "/product/get";
@@ -283,16 +316,19 @@ namespace resaurant_management_windows
 
        private void LoadImage(string url)
        {
-            url = "https://picsum.photos/200/300";
             using (WebClient webClient = new WebClient())
             {
                 byte[] imageData = webClient.DownloadData(url);
                 using (var stream = new System.IO.MemoryStream(imageData))
                 {
-                    this.DescriptionImg.Image = Image.FromStream(stream);
+                    Image image = Image.FromStream(stream);
+
+                    // Set the PictureBox's SizeMode to Zoom to ensure the image scales to fit
+                    this.DescriptionImg.SizeMode = PictureBoxSizeMode.Zoom;
+                    this.DescriptionImg.Image = image;
                 }
             }
-        }
+       }
 
         private void AddProduct_Click(object sender, EventArgs e)
         {
@@ -306,7 +342,8 @@ namespace resaurant_management_windows
                     Text = product.name + " - Số Lượng: " + quantity.ToString()
                                         + " => " + (product.price * quantity).ToString() + "$",
                     AutoSize = false,  // Set AutoSize to false to control the size explicitly
-                    MaximumSize = new Size(this.PenddingOrderList.ClientSize.Width - this.PenddingOrderList.Padding.Horizontal, 0),
+                    MaximumSize = 
+                    new Size(PenddingOrderList.ClientSize.Width - PenddingOrderList.Padding.Horizontal, 0),
                     Font = new Font("Times New Roman", 15, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0))),
                     Margin = new Padding(7),
                     BorderStyle = BorderStyle.FixedSingle,
@@ -431,6 +468,7 @@ namespace resaurant_management_windows
                         if (OrderedItems.Count() > 0) 
                             ToOnlBillPanelBtn.Enabled = true;
                         float TotalPrice = 0.0f;
+                        OrderedItemFLP.Controls.Clear();
                         foreach (OrderedItem item in OrderedItems) 
                         {
                             Label orderItem = new Label
@@ -476,5 +514,99 @@ namespace resaurant_management_windows
             OnlBillPanel.Visible = true;
             BookingPanel.Visible = false;
         }
+
+        private async void PayBtn_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(
+                "Xác nhận thanh toán",
+                "Thanh toán",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Question
+            );
+            if (result == DialogResult.Cancel)
+            {
+                return;
+            }
+            try
+            {
+                Table table = BookingPanel.Tag as Table;
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                    client.DefaultRequestHeaders.Add("id", table._id);
+                    HttpResponseMessage response =
+                        await client.GetAsync(HOST + "/user/payment");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        MessageBox
+        .Show("Thanh toán thành công. Cảm ơn quý khách đã sử dụng dịch vụ! Hẹn gặp lại quý khách lần sau",
+                        "ALL WITH LOVE");
+                        OnlBillPanel.Visible = false;
+                        ToOnlBillPanelBtn.Enabled = false;
+                        PenddingOrderedItems.Clear();
+                        OrderedItems.Clear();
+                        BookingPanel.Tag = null;
+                        HandleShowTables();
+                    }
+                    else
+                    {
+                        string ResponseMessage = await response.Content.ReadAsStringAsync();
+                        MessageBox.Show(response.StatusCode.ToString() + " - " + ResponseMessage);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+        private async void HandleClosingForm(object sender, FormClosingEventArgs e)
+        {
+            if (isFormClosingHandled)
+            {
+                // Prevent re-entry if the form is already closing
+                return;
+            }
+
+            if (BookingPanel.Tag != null)
+            {
+                Table table = BookingPanel.Tag as Table;
+
+                try
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                        client.DefaultRequestHeaders.Add("id", table._id);
+
+                        // Prevent form from closing immediately
+                        e.Cancel = true;
+
+                        HttpResponseMessage response = await client.GetAsync(HOST + "/user/reset-table");
+                        response.EnsureSuccessStatusCode();
+
+                        // Set the flag to indicate the request completed successfully
+                        isFormClosingHandled = true;
+
+                        // Allow form to close after request completes
+                        e.Cancel = false;
+                        this.Close(); // This should not re-trigger the FormClosing event due to the flag
+                    }
+                }
+                catch (HttpRequestException)
+                {
+                    isFormClosingHandled = true;
+                    e.Cancel = false; // Allow form to close even if there is an error
+                    this.Close();
+                }
+                catch (Exception)
+                {
+                    isFormClosingHandled = true;
+                    e.Cancel = false; // Allow form to close even if there is an error
+                }
+            }
+        }
+
     }
 }
